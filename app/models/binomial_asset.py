@@ -2,20 +2,25 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 class BinomialAssetRequestBase(BaseModel):
-    u: float
+    s0: float # Current Prices
+    u: float # increasing factor
     v: float
-    s: float
-    numSteps: int
+    N: int # number of steps
+    K: float # strike price
+    r: float # risk free interest rate
+    T: float # time to expiry
+    optionType: str
 
-class BinomialAssetRequestDrift(BaseModel):
-    vol: float
-    numSteps: int
-    s: float
-    timeStep: float
+class BinomialAssetRequestVol(BaseModel):
+    s0: float
+    sigma: float # volatility
+    T: float # time period
+    N: int
+    K: float # strike price
+    r: float # risk free interest rate
+    T: float # time to expiry
+    optionType: str
 
 class BinomialAssetResponse(BaseModel):
     asset_prices: List[List[float]]
-    sdAssetChange: Optional[float] = None
-    sdReturn: Optional[float] = None
-    expReturn: Optional[float] = None
 

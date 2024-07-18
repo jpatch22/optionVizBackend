@@ -1,21 +1,62 @@
 import numpy as np
 
-class BinomialAsset:
+class BinomialModelling:
     @staticmethod
-    def binomial_asset_value_base(u, v, s, nSteps):
-        assetValues = [[0 for _ in range(nSteps)] for _ in range(nSteps)]
-        assetValues[0][0] = s
-        for i in range(1, nSteps):
-            assetValues[i][0] = v * assetValues[i - 1][0]
-            for j in range(1, i + 1):
-                assetValues[i][j] = assetValues[i - 1][j-1] * u
-
-        return assetValues
+    def calculateBaseVol(sigma, S0, T, N):
+        dt = T / N
+        u = 1 + sigma * np.sqrt(dt)
+        v = 1 - sigma * np.sqrt(dt)
+        return BinomialModelling.calculate_asset_prices(S0, u, v, N)
 
     @staticmethod
-    def binomial_asset_value_drift(s, vol, timeStep, nSteps):
-        u = 1 + vol * np.sqrt(timeStep)
-        v = 1 - vol * np.sqrt(timeStep)
-        return binomial_asset_value_base(u, v, s, nSteps)
+    def calculateAssetBase(S0, u, v, N):
+        return BinomialModelling.calculate_asset_prices(S0, u, v, N)
 
+    @staticmethod
+    def calculateOptionBase(S0, u, v, sigma, N, K, r, T, payoff_func):
+        assetValues = BinomialModelling.calculate_asset_prices(S0, u, v, N)
+        dt = T / N
+        p = 0.5 + r * np.sqrt(dt) / (2 * sigma)
+        return BinomialModelling.calculate_option_prices(assetValues, K, r, dt, p, payoff_func)
+
+    @staticmethod
+    def calculateOptionVol(sigma, S0, T, N, K, r, payoff_func):
+        dt = T / N
+        p = 0.5 + r * np.sqrt(dt) / (2 * sigma)
+        assetValues = BinomialModelling.calculateBaseVol(sigma, S0, T, N)
+        return BinomialModelling.calculate_option_prices(assetValues, K, r, dt, p, payoff_func)
+
+    @staticmethod
+    def calculate_asset_prices(S0, u, v, N):
+        asset_prices = np.zeros((N + 1, N + 1))
+        for i in range(N + 1):
+            for j in range(i + 1):
+                asset_prices[j, i] = S0 * (u ** (i - j)) * (v ** j)
+        return asset_prices
+
+    @staticmethod
+    def calculate_option_prices(asset_prices, K, r, delta_t, p, payoff_func):
+        N = asset_prices.shape[1] - 1
+        option_values = np.zeros_like(asset_prices)
+        
+        # Initialize option values at maturity
+        for j in range(N + 1):
+            option_values[j, N] = payoff_func(asset_prices[j, N], K)
+        
+        # Back prop
+        for i in range(N - 1, -1, -1):
+            for j in range(i + 1):
+                option_values[j, i] = np.exp(-r * delta_t) * (p * option_values[j, i + 1] + (1 - p) * option_values[j + 1, i + 1])
+        
+        return option_values
+
+    @staticmethod
+    def call_payoff(S, K):
+        """Payoff function for a European call option."""
+        return max(0, S - K)
+
+    @staticmethod
+    def put_payoff(S, K):
+        """Payoff function for a European put option."""
+        return max(0, K - S)
 

@@ -2,19 +2,16 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 class BinomialOptionRequestBase(BaseModel):
-    u: float
+    s0: float # Current Prices
+    u: float # increasing factor
     v: float
-    s: float
-    numSteps: int
-    p: float
-    r: float
+    N: int # number of steps
 
 class BinomialOptionRequestDrift(BaseModel):
-    vol: float
-    numSteps: int
-    s: float
-    timeStep: float
-    r: float
+    s0: float
+    sigma: float # volatility
+    T: float # time period
+    N: int
 
 class BinomialOptionResponse(BaseModel):
     optionPrices: List[List[float]]
