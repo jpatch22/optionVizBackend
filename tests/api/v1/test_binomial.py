@@ -15,23 +15,23 @@ def test_calculate_binomial_asset_request_base():
         json={
             "u": 1.1,
             "v": 0.9,
-            "s": 100,
-            "numSteps": 10
+            "s0": 100,
+            "N": 10
         }
     )
     assert response.status_code == 200
-    assert "asset_prices" in response.json()
+    assert "assetPrices" in response.json()
 
 def test_calculate_binomial_asset_request_drift():
     response = client.post(
         "/binomial_asset/",
         json={
-            "s": 100,
-            "vol": 0.2,
-            "timeStep": 1,
-            "numSteps": 10
+            "s0": 100,
+            "sigma": 0.2,
+            "T": 1,
+            "N": 10
         }
     )
     assert response.status_code == 200
-    assert "asset_prices" in response.json()
+    assert "assetPrices" in response.json()
 

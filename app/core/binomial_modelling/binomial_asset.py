@@ -50,13 +50,3 @@ class BinomialModelling:
         
         return option_values
 
-    @staticmethod
-    def call_payoff(S, K):
-        """Payoff function for a European call option."""
-        return max(0, S - K)
-
-    @staticmethod
-    def put_payoff(S, K):
-        """Payoff function for a European put option."""
-        return max(0, K - S)
-
