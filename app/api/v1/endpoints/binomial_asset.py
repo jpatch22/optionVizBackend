@@ -2,8 +2,7 @@ from fastapi import APIRouter, HTTPException
 from app.models.binomial_asset import BinomialAssetRequestBase, \
         BinomialAssetRequestDrift, BinomialAssetResponse
 from typing import Union
-from app.core.binomial_modelling.binomial_asset import binomial_asset_value_base, \
-        binomial_asset_value_drift
+from app.core.binomial_modelling.binomial_asset import BinomialAsset
 
 router = APIRouter()
 
@@ -11,7 +10,7 @@ router = APIRouter()
 def binomial_asset(request: Union[BinomialAssetRequestDrift, BinomialAssetRequestBase]):
     try:
         if isinstance(request, BinomialAssetRequestBase):
-            valueTree = binomial_asset_value_base(
+            valueTree = BinomialAsset.binomial_asset_value_base(
                     request.u,
                     request.v,
                     request.s,
@@ -21,7 +20,7 @@ def binomial_asset(request: Union[BinomialAssetRequestDrift, BinomialAssetReques
                         asset_prices = valueTree
                    )
         elif isinstance(request, BinomialAssetRequestDrift):
-            valueTree = binomial_asset_value_drift(
+            valueTree = BinomialAsset.binomial_asset_value_drift(
                         request.s,
                         request.vol,
                         request.timeStep,
