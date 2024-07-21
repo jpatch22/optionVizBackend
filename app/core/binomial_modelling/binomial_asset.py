@@ -29,9 +29,12 @@ class BinomialModelling:
     @staticmethod
     def calculate_asset_prices(S0, u, v, N):
         asset_prices = np.zeros((N + 1, N + 1))
-        for i in range(N + 1):
-            for j in range(i + 1):
-                asset_prices[j, i] = S0 * (u ** (i - j)) * (v ** j)
+        asset_prices[0][0] = S0
+        for i in range(1, N + 1):
+            asset_prices[i][0] = v * asset_prices[i - 1][0]
+            for j in range(1, i + 1):
+                asset_prices[i][j] = asset_prices[i - 1][j-1] * u
+
         return asset_prices
 
     @staticmethod

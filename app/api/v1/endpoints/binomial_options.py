@@ -9,7 +9,6 @@ router = APIRouter()
 
 @router.post("/", response_model=BinomialOptionResponse)
 def binomial_asset(request: Union[BinomialOptionRequestBase, BinomialOptionRequestVol]):
-    print("JACK RUNNING HERE")
     try:
         if isinstance(request, BinomialOptionRequestBase):
             return BinomialOptionResponse(

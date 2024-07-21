@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.endpoints import calculations
 from app.api.v1.endpoints import binomial_asset
 from app.api.v1.endpoints import binomial_options
+from app.api.v1.endpoints import asset_sim
 
 app = FastAPI()
 
@@ -18,6 +19,7 @@ app.add_middleware(
 app.include_router(calculations.router, prefix="/calculations", tags=["calculations"])
 app.include_router(binomial_asset.router, prefix="/binomial_asset", tags=["binomial_asset"])
 app.include_router(binomial_options.router, prefix="/binomial_options", tags=["binomial_options"])
+app.include_router(asset_sim.router, prefix="/asset_sim", tags=["asset_sim"])
 
 @app.get("/")
 def read_root():
