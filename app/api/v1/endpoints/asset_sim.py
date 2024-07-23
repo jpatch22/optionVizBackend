@@ -6,19 +6,9 @@ router = APIRouter()
 
 @router.post("/", response_model=AssetSimResponse)
 def asset_sim(request: AssetSimRequest):
-    print(f"Running here: {request}")
     try:
-        print("This thing")
         if isinstance(request, AssetSimRequest):
-            print(f"here a;lsdkjf {request}")
-            #res = AssetSim.doLognormalAssetWalk(
-            #                request.s0,
-            #                request.T,
-            #                request.N,
-            #                request.sigma,
-            #                request.drift)
-            res = AssetSim.doLognormalAssetWalk(1, 1, 1, 1, 5)
-            print("hereasl;kfdj")
+            res = AssetSim.doLognormalAssetWalk(request.s0, request.T, request.N, request.sigma, request.drift)
             print(res)
             return AssetSimResponse(assetPrices = res)
         else:
