@@ -30,7 +30,7 @@ class BSOptionValues:
                 put_values = BSOptionValues.getPutValue(time_mesh, price_mesh, expValue, vol, r, T)
                 portfolioVal += sign * put_values
 
-        print("min: ", np.min(portfolioVal))
+        portfolioVal = np.nan_to_num(portfolioVal, nan=0)
         return np.round(portfolioVal, 3), time_grid, price_grid
 
     @staticmethod

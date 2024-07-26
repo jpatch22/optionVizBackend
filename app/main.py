@@ -5,6 +5,8 @@ from app.api.v1.endpoints import binomial_asset
 from app.api.v1.endpoints import binomial_options
 from app.api.v1.endpoints import asset_sim
 from app.api.v1.endpoints import bs_op_val
+from app.api.v1.endpoints import greeks
+from app.api.v1.endpoints import vol_modelling
 
 app = FastAPI()
 
@@ -22,6 +24,8 @@ app.include_router(binomial_asset.router, prefix="/binomial_asset", tags=["binom
 app.include_router(binomial_options.router, prefix="/binomial_options", tags=["binomial_options"])
 app.include_router(asset_sim.router, prefix="/asset_sim", tags=["asset_sim"])
 app.include_router(bs_op_val.router, prefix="/bs_op_val", tags=["bs_op_val"])
+app.include_router(greeks.router, prefix="/greeks", tags=["greeks"])
+app.include_router(vol_modelling.router, prefix="/volatility", tags=["volatility"])
 
 @app.get("/")
 def read_root():
